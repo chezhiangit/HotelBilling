@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, TextInput} from 'react-native';
+import {StyleSheet, View, TextInput, Text} from 'react-native';
 import Dialog, {
   DialogContent,
   DialogTitle,
@@ -8,7 +8,7 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import {deviceFactor} from '../../Utils/resolution';
 
-class OpenOrderDialogComponent extends Component {
+class CreateOrderDialogComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,6 +59,38 @@ class OpenOrderDialogComponent extends Component {
               autoFocus={true}
             />
           </View>
+          <View style={styles.container}>
+            <TextInput
+              onChangeText={text => this.onTextChange(text)}
+              placeholder={'Enter waiter number'}
+              style={styles.text}
+              autoFocus={true}
+            />
+          </View>
+          {/* <View style={{flexDirection: 'row',height:deviceFactor(10)}}>
+            <View
+              style={{
+                heig: deviceFactor(10),
+                width: deviceFactor(10),
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 100,
+                marginRight: deviceFactor(5),
+              }}
+            />
+            <Text style={{marginRight: deviceFactor(5)}}>KOT receipt</Text>
+            <View
+              style={{
+                heig: deviceFactor(10),
+                width: deviceFactor(10),
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 100,
+                marginRight: deviceFactor(5),
+              }}
+            />
+            <Text style={{marginRight: deviceFactor(5)}}>Billing</Text>
+          </View> */}
         </DialogContent>
       </Dialog>
     );
@@ -108,6 +140,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#006600',
     justifyContent: 'center',
+    marginBottom: deviceFactor(5),
   },
   text: {
     fontSize: deviceFactor(12),
@@ -115,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OpenOrderDialogComponent;
+export default CreateOrderDialogComponent;

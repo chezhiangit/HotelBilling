@@ -6,7 +6,10 @@ import {deviceFactor} from '../../Utils/resolution';
 export const SearchBar = props => {
   return (
     <View style={styles.searchBarContainer}>
-      <TextInput style={styles.searchTextInput} />
+      <TextInput
+        style={styles.searchTextInput}
+        onChangeText={props.searchItems}
+      />
       {/* <Image style={styles.searchIcon} /> */}
       {/* <Icon name="search1" size={30} color="rgb(238,238,238)" /> */}
     </View>

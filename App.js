@@ -16,7 +16,7 @@ import {Provider} from 'react-redux';
 import store from '../Billing/src/store/store';
 
 import FoodPage from './src/Food/FoodPage';
-import SoftDrinksPage from './src/SoftDrinks/SoftDrinksPage';
+import MorePage from './src/More/MorePage';
 import BillingPage from './src/Billing/BillingPage';
 import ReportPage from './src/Report/ReportPage';
 
@@ -43,17 +43,17 @@ const FoodTab = createStackNavigator(
         color: Colors.tabCaptionColor,
       },
       // headerTintColor: '#FFFFFF',
-      title: I18n.t('menu.food'),
+      title: `${I18n.t('menu.food')}/${I18n.t('menu.drinks')}`,
     },
     navigationOptions: {
-      tabBarLabel: I18n.t('menu.food'),
+      tabBarLabel: `${I18n.t('menu.food')}/${I18n.t('menu.drinks')}`,
     },
   },
 );
 
-const SoftDrinksTab = createStackNavigator(
+const MoreTab = createStackNavigator(
   {
-    drinks: SoftDrinksPage,
+    more: MorePage,
   },
   {
     defaultNavigationOptions: {
@@ -70,10 +70,10 @@ const SoftDrinksTab = createStackNavigator(
         color: Colors.tabCaptionColor,
       },
       // headerTintColor: '#FFFFFF',
-      title: I18n.t('menu.drinks'),
+      title: I18n.t('menu.more'),
     },
     navigationOptions: {
-      tabBarLabel: I18n.t('menu.drinks'),
+      tabBarLabel: I18n.t('menu.more'),
     },
   },
 );
@@ -135,9 +135,9 @@ const ReportTab = createStackNavigator(
 const AppNavigator = createBottomTabNavigator(
   {
     Food: FoodTab,
-    SoftDrinks: SoftDrinksTab,
     Billing: BillingTab,
     Report: ReportTab,
+    More: MoreTab,
   },
   {
     initialRouteName: 'Food',

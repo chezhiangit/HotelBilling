@@ -5,85 +5,90 @@ import {connect} from 'react-redux';
 import {deviceFactor} from '../Utils/resolution';
 import {SearchBar} from '../Components/UIComponents/SearchBar';
 import ItemListComponent from '../Components/UIComponents/ItemList';
-import OrdersListComponent from '../Components/UIComponents/OrderListComponents/OrderList';
+import OrderedListComponent from '../Components/UIComponents/OrderListComponents/OrderedListComponent';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {saveTableNumber, clearAllOrderedItems} from '../Actions/FoodActions';
-import OpenOrderDialogComponent from '../Components/UIComponents/OpenOrderDialogComponent';
+import {
+  saveTableNumber,
+  clearAllOrderedItems,
+  editOrderedItems,
+} from '../Actions/FoodActions';
+import CreateOrderDialogComponent from '../Components/UIComponents/CreateOrderDialogComponent';
+import EditOrderedItemDialogComponent from '../Components/UIComponents/EditOrderedItemDialogComponent';
 import ListHeaderComponent from '../Components/UIComponents/OrderListComponents/ListHeaderComponent';
 import ListFooterComponent from '../Components/UIComponents/OrderListComponents/ListFooterComponent';
 
 const DATA = [
   {
-    itemCode: 100,
+    itemCode: '100',
     itemName: 'Idly',
-    price: 100.75,
-    qty: 1,
+    price: '100.75',
+    qty: '1',
   },
   {
-    itemCode: 101,
+    itemCode: '101',
     itemName: 'Dosa',
-    price: 200.25,
-    qty: 1,
+    price: '200.25',
+    qty: '1',
   },
   {
-    itemCode: 102,
+    itemCode: '102',
     itemName: 'Vada',
-    price: 300.5,
-    qty: 1,
+    price: '75.50',
+    qty: '1',
   },
   {
-    itemCode: 103,
+    itemCode: '103',
     itemName: 'Poori',
-    price: 400.0,
+    price: '150.00',
     qty: 1,
   },
   {
-    itemCode: 104,
+    itemCode: '104',
     itemName: 'Pongal',
-    price: 500.8,
-    qty: 1,
+    price: '105.00',
+    qty: '1',
   },
   {
-    itemCode: 105,
+    itemCode: '105',
     itemName: 'Tea',
-    price: 300.4,
-    qty: 1,
+    price: '15',
+    qty: '1',
   },
   {
-    itemCode: 106,
+    itemCode: '106',
     itemName: 'Coffee',
-    price: 100.75,
-    qty: 1,
+    price: '25',
+    qty: '1',
   },
   {
-    itemCode: 107,
+    itemCode: '107',
     itemName: 'Pepsi',
-    price: 200.25,
-    qty: 1,
+    price: '30.50',
+    qty: '1',
   },
   {
-    itemCode: 108,
+    itemCode: '108',
     itemName: 'Rotti',
-    price: 300.5,
-    qty: 1,
+    price: '50.50',
+    qty: '1',
   },
   {
-    itemCode: 109,
+    itemCode: '109',
     itemName: 'Parotta',
-    price: 400.0,
-    qty: 1,
+    price: '40.00',
+    qty: '1',
   },
   {
-    itemCode: 110,
+    itemCode: '110',
     itemName: 'Lemon Rice',
-    price: 500.8,
-    qty: 1,
+    price: '50.50',
+    qty: '1',
   },
   {
-    itemCode: 111,
+    itemCode: '111',
     itemName: 'Full meals',
-    price: 300.4,
-    qty: 1,
+    price: '100.50',
+    qty: '1',
   },
 ];
 
@@ -95,8 +100,10 @@ class FoodPage extends Component {
       showEditOrder: false,
       tableNo: '',
       totalAmount: 0,
+      itemListData: [...DATA],
+      showEditOrderedItemsDlg: false,
     };
-    // this.totalAmount = 0;
+    this.editedOrder = {};
   }
 
   onNewOrder = () => {
@@ -108,7 +115,7 @@ class FoodPage extends Component {
   };
 
   onDlgDone = tableNo => {
-    // console.log('table No: ', tableNo);
+    console.log('table No: ', tableNo);
     if (tableNo !== undefined && tableNo !== '') {
       this.setState({
         showEditOrder: false,
@@ -122,6 +129,18 @@ class FoodPage extends Component {
     }
   };
 
+  editOrderedItemDlgDone = itemDetails => {
+    this.setState({showEditOrderedItemsDlg: false});
+    this.editedOrder = {...itemDetails};
+    this.props.editOrderedItems(this.editedOrder);
+    this.editedOrder = {};
+  };
+
+  editOrderedItemDlgCancel = () => {
+    this.setState({showEditOrderedItemsDlg: false});
+    this.editedOrder = {};
+  };
+
   onDlgCancel = () => {
     this.setState({
       showEditOrder: false,
@@ -130,54 +149,103 @@ class FoodPage extends Component {
   };
 
   onClearAllOrderedItems = () => {
-    this.props.clearAllOrderedItems(this.props.tableNo);
+    console.log('current table number .... ', this.state.tableNo);
+
+    if (this.state.tableNo !== '') {
+      this.props.clearAllOrderedItems(this.state.tableNo);
+    }
   };
 
   static getDerivedStateFromProps(props, state) {
     // console.log('getDerivedStateFromProps', props);
+    let total = 0;
     if (props.orders?.length > 0) {
-      let total = 0;
       let x = null;
       for (x of props.orders) {
-        total = total + x.price;
+        total = total + x.price * x.qty;
       }
       // console.log('getDerivedStateFromProps ....total', total);
       return {totalAmount: total};
+    } else {
+      return {totalAmount: 0};
     }
-    return {};
   }
+
+  searchItems = searchText => {
+    const itemList = DATA.filter((item, index) => {
+      const reg = searchText; //'[' + searchText + ']';
+      console.log('regex ... ', reg);
+      if (searchText.length > 0 && item.itemName.match(reg, 'gi')?.length > 0) {
+        return {...item};
+      }
+      return null;
+    });
+
+    console.log('searched items ....', itemList);
+
+    if (itemList !== undefined && itemList !== null && itemList.length > 0) {
+      console.log('searched items found....', itemList);
+      this.setState({itemListData: [...itemList]});
+      return;
+    }
+    this.setState({itemListData: [...DATA]});
+  };
+
+  editOrderedItem = editedOrder => {
+    this.editedOrder = {...editedOrder};
+    console.log('edited items....', editedOrder);
+    this.setState({
+      showEditOrderedItemsDlg: true,
+      editItemdlgTitle: 'Edit Ordered Item',
+    });
+  };
 
   render() {
     // console.log('food page navigation state....', this.props.navigation.state);
     return (
       <View style={styles.mainContainer}>
         <View style={styles.leftContainer}>
-          <SearchBar />
-          <ItemListComponent items={DATA} onNoTableNumber={this.onNewOrder} />
+          <SearchBar searchItems={this.searchItems} />
+          <ItemListComponent
+            items={this.state.itemListData}
+            onNoTableNumber={this.onNewOrder}
+          />
         </View>
         <View style={styles.rightContainer}>
           <View style={styles.orderTitleContainer}>
             <TouchableOpacity onPress={this.onNewOrder}>
-              <Text style={styles.newOrderText}>New Order</Text>
+              <Text style={styles.newOrderText}>Create Order</Text>
             </TouchableOpacity>
             <View style={styles.ordersTitle}>
               <Text style={styles.orderTitleText}>Orders</Text>
             </View>
             <TouchableOpacity onPress={this.onEditOrder}>
-              <Text style={styles.editOrderText}>Edit Order</Text>
+              <Text style={styles.editOrderText}>Open Order</Text>
             </TouchableOpacity>
           </View>
           <ListHeaderComponent
             onClearAllOrderedItems={this.onClearAllOrderedItems}
+            deleteRows={true}
           />
-          <OrdersListComponent items={this.props.orders} />
+          <OrderedListComponent
+            items={this.props.orders}
+            editOrderedItem={this.editOrderedItem}
+            deleteRow={true}
+          />
           <ListFooterComponent totalAmount={this.state.totalAmount} />
         </View>
-        <OpenOrderDialogComponent
+        <CreateOrderDialogComponent
           onDlgDone={this.onDlgDone}
           onDlgCancel={this.onDlgCancel}
           dlgTitle={this.state.dlgTitle}
           isDialogVisible={this.state.showNewOrder || this.state.showEditOrder}
+        />
+        <EditOrderedItemDialogComponent
+          onDlgDone={this.editOrderedItemDlgDone}
+          onDlgCancel={this.editOrderedItemDlgCancel}
+          dlgTitle={this.state.editItemdlgTitle}
+          isDialogVisible={this.state.showEditOrderedItemsDlg}
+          itemDetails={this.editedOrder}
         />
       </View>
     );
@@ -206,6 +274,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // alignItems: 'center',
     paddingLeft: deviceFactor(5),
+    paddingRight: deviceFactor(5),
   },
   orderTitleContainer: {
     width: '100%',
@@ -237,7 +306,9 @@ const mapDispatchToProps = dispatch => ({
   // saveOrder: dispatch(saveOrder()),
   saveTableNumber: tableNo => dispatch(saveTableNumber(tableNo)),
   clearAllOrderedItems: tableNo => dispatch(clearAllOrderedItems(tableNo)),
+  editOrderedItems: itemDetails => dispatch(editOrderedItems(itemDetails)),
 });
+
 const mapStateToProps = state => {
   console.log('state from foodpage', state);
   return {

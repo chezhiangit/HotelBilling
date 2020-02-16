@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {connect} from 'react-redux';
 
 import {deviceFactor} from '../../Utils/resolution';
@@ -26,6 +33,15 @@ class ItemListComponent extends Component {
           this.props.tableNo && this.onItemSelected(item);
         }}>
         <View style={styles.item}>
+          <Image
+            source=""
+            style={{
+              height: deviceFactor(20),
+              width: deviceFactor(20),
+              borderColor: 'yellow',
+              borderWidth: 1,
+            }}
+          />
           <Text style={styles.title}>{item.itemName}</Text>
         </View>
       </TouchableOpacity>
@@ -51,6 +67,7 @@ const styles = StyleSheet.create({
     width: deviceFactor(97),
     borderRadius: deviceFactor(1),
     margin: deviceFactor(1),
+    flexDirection: 'row',
   },
   title: {
     fontSize: deviceFactor(10),

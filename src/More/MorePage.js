@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Button, View, Text} from 'react-native';
 
-export default class SoftDrinksPage extends Component {
+export default class MorePage extends Component {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Soft Drinks Screen</Text>
+        <Text>More Options Screen</Text>
       </View>
     );
   }

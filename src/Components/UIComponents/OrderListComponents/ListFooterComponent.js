@@ -6,7 +6,11 @@ const currencyRegx = /(\d)(?=(\d{2})+\d\.)/g;
 
 export default function ListFooterComponent(props) {
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        props.footerContainerWidth && {width: props.footerContainerWidth},
+      ]}>
       <View style={styles.price}>
         <Text style={styles.amountText}>Total Amount:</Text>
         <Text style={styles.amount}>

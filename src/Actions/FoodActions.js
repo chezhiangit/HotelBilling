@@ -3,6 +3,7 @@ import {
   DELETE_ORDERED_ITEM,
   CREATE_ORDER,
   CLEAR_ALL_ORDERED_ITEMS,
+  EDIT_ORDERED_ITEM,
 } from './ActionTypes';
 
 export const saveOrder = (item, tableNo) => ({
@@ -21,4 +22,8 @@ export const saveTableNumber = tableNo => ({
 export const clearAllOrderedItems = tableNo => ({
   type: CLEAR_ALL_ORDERED_ITEMS,
   tableNo,
+});
+export const editOrderedItems = editedOrderedItem => ({
+  type: EDIT_ORDERED_ITEM,
+  editedOrderedItem,
 });

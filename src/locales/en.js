@@ -5,5 +5,6 @@ export default {
     drinks: 'Drinks',
     billing: 'Billing',
     report: 'Report',
+    more: 'More',
   },
 };
