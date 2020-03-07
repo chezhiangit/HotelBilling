@@ -27,7 +27,7 @@ const KeyboardAwareComponent = ChildComponent => class ParentComponent extends P
     };
 
     handleKeyboardDidHide = () => {
-      console.log('handleKeyboardDidHide.....');
+      // console.log('handleKeyboardDidHide.....');
       Animated.timing(this.state.shift, {
         toValue: 0,
         duration: 400,
@@ -37,7 +37,7 @@ const KeyboardAwareComponent = ChildComponent => class ParentComponent extends P
     };
 
     registerKeyboard = () => {
-      console.log('registerKeyboard.....');
+      // console.log('registerKeyboard.....');
       this.keyboardDidShowSub = Keyboard.addListener(
         'keyboardWillShow',
         this.handleKeyboardDidShow,
@@ -49,7 +49,7 @@ const KeyboardAwareComponent = ChildComponent => class ParentComponent extends P
     };
 
     deregisterKeyboard = () => {
-      console.log('deregisterKeyboard.....');
+      // console.log('deregisterKeyboard.....');
       this.keyboardDidShowSub.remove();
       this.keyboardDidHideSub.remove();
     };

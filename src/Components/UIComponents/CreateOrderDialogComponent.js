@@ -13,11 +13,16 @@ class CreateOrderDialogComponent extends Component {
     super(props);
     this.state = {
       tableNo: '',
+      waiterCode: '',
     };
   }
 
-  onTextChange = text => {
+  onTableTextChange = text => {
     this.setState({tableNo: text});
+  };
+
+  onWaiterTextChange = text => {
+    this.setState({waiterCode: text});
   };
 
   render() {
@@ -45,7 +50,9 @@ class CreateOrderDialogComponent extends Component {
               style={styles.doneButton}
               textStyle={styles.buttonText}
               text="DONE"
-              onPress={() => this.props.onDlgDone(this.state.tableNo)}
+              onPress={() =>
+                this.props.onDlgDone(this.state.tableNo, this.state.waiterCode)
+              }
             />
           </DialogFooter>
         }
@@ -53,7 +60,7 @@ class CreateOrderDialogComponent extends Component {
         <DialogContent style={styles.dialogContent}>
           <View style={styles.container}>
             <TextInput
-              onChangeText={text => this.onTextChange(text)}
+              onChangeText={text => this.onTableTextChange(text)}
               placeholder={'Enter table number'}
               style={styles.text}
               autoFocus={true}
@@ -61,7 +68,7 @@ class CreateOrderDialogComponent extends Component {
           </View>
           <View style={styles.container}>
             <TextInput
-              onChangeText={text => this.onTextChange(text)}
+              onChangeText={text => this.onWaiterTextChange(text)}
               placeholder={'Enter waiter number'}
               style={styles.text}
               autoFocus={true}

@@ -68,10 +68,13 @@ const styles = StyleSheet.create({
     borderRadius: deviceFactor(1),
     margin: deviceFactor(1),
     flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
   },
   title: {
     fontSize: deviceFactor(10),
     color: Colors.tabCaptionColor,
+    marginLeft: deviceFactor(2),
   },
 });
 

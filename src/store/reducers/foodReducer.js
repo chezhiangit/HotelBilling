@@ -4,24 +4,50 @@ import {
   CREATE_ORDER,
   CLEAR_ALL_ORDERED_ITEMS,
   EDIT_ORDERED_ITEM,
+  SET_CURRENT_TABLE_NO,
+  PAYMENT_DONE,
 } from '../../Actions/ActionTypes';
 const initialState = {
   tableNo: '',
+  pendingBills: [],
+  billNo: 0,
+  // waiterCode: 123,
+  // CashierCode: 456,
 };
 
-const FindItemInOrder = (state, item) => {
-  console.log('state from reducer ...', state);
+const findItemInOrder = (state, item) => {
+  // console.log('state from reducer ...', state);
   return state[state.tableNo]?.findIndex(
     element => element.itemCode === item.itemCode,
   );
 };
 
+const findBill = state => {
+  // console.log('state from reducer ...', state);
+  return state.pendingBills.findIndex(
+    element => element.tableNo === state.tableNo,
+  );
+};
+
+const findNextPendingBillTableNo = pendingBills => {
+  // console.log('state.pendingBills.....', pendingBills);
+  const indexVal = pendingBills.findIndex(
+    element => element.paymentStatus === '',
+  );
+  let tableNo = '';
+  // console.log('indexVal ....', indexVal);
+  if (indexVal !== undefined && indexVal !== -1) {
+    tableNo = pendingBills[indexVal]?.tableNo;
+  }
+  return tableNo;
+};
+
 const foodReducer = (state = initialState, action) => {
   switch (action.type) {
     case ITEM_SELECTED:
-      const itemIndex = FindItemInOrder(state, action.selectedItem);
+      const itemIndex = findItemInOrder(state, action.selectedItem);
 
-      console.log('item index.....', itemIndex);
+      // console.log('item index.....', itemIndex);
 
       if (itemIndex !== undefined && itemIndex !== -1) {
         let items = [...state[state.tableNo]];
@@ -56,6 +82,22 @@ const foodReducer = (state = initialState, action) => {
           ...state,
           tableNo: action.tableNo,
           [action.tableNo]: [],
+          pendingBills: [
+            ...state.pendingBills,
+            {
+              tableNo: action.tableNo,
+              waiterName: '', //action.serverName,
+              waiterCode: action.waiterCode,
+              cashierName: '',
+              cashierCode: '',
+              paymentStatus: '',
+              paymentType: '',
+              discount: '',
+              amountPaid: '',
+              totalAmount: '',
+              paymentDate: '',
+            },
+          ],
         };
       }
       return {
@@ -69,9 +111,9 @@ const foodReducer = (state = initialState, action) => {
       };
     }
     case EDIT_ORDERED_ITEM:
-      const editedItemIndex = FindItemInOrder(state, action.editedOrderedItem);
+      const editedItemIndex = findItemInOrder(state, action.editedOrderedItem);
 
-      console.log('edited item index.....', itemIndex);
+      // console.log('edited item index.....', itemIndex);
 
       if (editedItemIndex !== undefined && editedItemIndex !== -1) {
         let items = [...state[state.tableNo]];
@@ -83,6 +125,24 @@ const foodReducer = (state = initialState, action) => {
       }
       return {
         ...state,
+      };
+    case SET_CURRENT_TABLE_NO:
+      return {
+        ...state,
+        tableNo: action.tableNo,
+      };
+    case PAYMENT_DONE:
+      let billItemIndex = findBill(state);
+      let pendingBills = [...state.pendingBills];
+      let billItem = pendingBills[billItemIndex];
+      billItem = {...billItem, ...action.payment};
+      pendingBills[billItemIndex] = {...billItem};
+      const tableNo = findNextPendingBillTableNo(pendingBills);
+      // console.log('Next pending bill table no ....', tableNo);
+      return {
+        ...state,
+        pendingBills: [...pendingBills],
+        tableNo: tableNo,
       };
     default:
       return state;

@@ -21,16 +21,16 @@ class EditOrderedItemDialogComponent extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, state) {
-    console.log(
-      'edited order getDerivedStateFromProps...',
-      nextProps.itemDetails,
-    );
-    console.log('state getDerivedStateFromProps...', state);
+    // console.log(
+    //   'edited order getDerivedStateFromProps...',
+    //   nextProps.itemDetails,
+    // );
+    // console.log('state getDerivedStateFromProps...', state);
     if (state.itemCode === '' && nextProps.isDialogVisible) {
-      console.log('state getDerivedStateFromProps... if ', state);
+      // console.log('state getDerivedStateFromProps... if ', state);
       return {...nextProps.itemDetails};
     } else if (!nextProps.isDialogVisible) {
-      console.log('state getDerivedStateFromProps... else ', state);
+      // console.log('state getDerivedStateFromProps... else ', state);
       return {itemCode: '', itemName: '', price: '', qty: ''};
     }
     return {};
@@ -61,7 +61,7 @@ class EditOrderedItemDialogComponent extends React.PureComponent {
   };
 
   render() {
-    console.log('edited order render...', this.props.itemDetails);
+    // console.log('edited order render...', this.props.itemDetails);
     return (
       <Dialog
         onDismiss={this.onDismissDlg}

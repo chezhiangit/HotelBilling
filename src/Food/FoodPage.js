@@ -11,11 +11,14 @@ import {
   saveTableNumber,
   clearAllOrderedItems,
   editOrderedItems,
+  updatePaymentStatus,
 } from '../Actions/FoodActions';
 import CreateOrderDialogComponent from '../Components/UIComponents/CreateOrderDialogComponent';
 import EditOrderedItemDialogComponent from '../Components/UIComponents/EditOrderedItemDialogComponent';
 import ListHeaderComponent from '../Components/UIComponents/OrderListComponents/ListHeaderComponent';
 import ListFooterComponent from '../Components/UIComponents/OrderListComponents/ListFooterComponent';
+import FloatingButton from '../Components/UIComponents/FloatingButtons';
+import PaymentDialog from '../Components/UIComponents/PaymentDialog';
 
 const DATA = [
   {
@@ -98,10 +101,11 @@ class FoodPage extends Component {
     this.state = {
       showNewOrder: false,
       showEditOrder: false,
-      tableNo: '',
+      // tableNo: '',
       totalAmount: 0,
       itemListData: [...DATA],
       showEditOrderedItemsDlg: false,
+      paymentDlgVisible: false,
     };
     this.editedOrder = {};
   }
@@ -114,16 +118,17 @@ class FoodPage extends Component {
     this.setState({showEditOrder: true, dlgTitle: 'Edit Order'});
   };
 
-  onDlgDone = tableNo => {
-    console.log('table No: ', tableNo);
+  onDlgDone = (tableNo, waiterCode) => {
+    // console.log('table No: ', tableNo);
     if (tableNo !== undefined && tableNo !== '') {
       this.setState({
         showEditOrder: false,
         showNewOrder: false,
-        tableNo,
+        // tableNo,
         totalAmount: 0,
+        waiterCode,
       });
-      this.props.saveTableNumber(tableNo);
+      this.props.saveTableNumber(tableNo, waiterCode);
     } else {
       // ShortToast('Pleas enter table number!');
     }
@@ -149,10 +154,10 @@ class FoodPage extends Component {
   };
 
   onClearAllOrderedItems = () => {
-    console.log('current table number .... ', this.state.tableNo);
+    // console.log('current table number .... ', this.props.tableNo);
 
-    if (this.state.tableNo !== '') {
-      this.props.clearAllOrderedItems(this.state.tableNo);
+    if (this.props.tableNo !== '') {
+      this.props.clearAllOrderedItems(this.props.tableNo);
     }
   };
 
@@ -174,17 +179,17 @@ class FoodPage extends Component {
   searchItems = searchText => {
     const itemList = DATA.filter((item, index) => {
       const reg = searchText; //'[' + searchText + ']';
-      console.log('regex ... ', reg);
+      // console.log('regex ... ', reg);
       if (searchText.length > 0 && item.itemName.match(reg, 'gi')?.length > 0) {
         return {...item};
       }
       return null;
     });
 
-    console.log('searched items ....', itemList);
+    // console.log('searched items ....', itemList);
 
     if (itemList !== undefined && itemList !== null && itemList.length > 0) {
-      console.log('searched items found....', itemList);
+      // console.log('searched items found....', itemList);
       this.setState({itemListData: [...itemList]});
       return;
     }
@@ -193,15 +198,41 @@ class FoodPage extends Component {
 
   editOrderedItem = editedOrder => {
     this.editedOrder = {...editedOrder};
-    console.log('edited items....', editedOrder);
+    // console.log('edited items....', editedOrder);
     this.setState({
       showEditOrderedItemsDlg: true,
       editItemdlgTitle: 'Edit Ordered Item',
     });
   };
 
+  onBilling = () => {
+    this.setState({paymentDlgVisible: true});
+  };
+
+  onPaymentDlgCancel = () => {
+    this.setState({paymentDlgVisible: false});
+  };
+
+  onPaymentDlgDone = payment => {
+    // console.log('Payment details...', payment);
+    this.setState({paymentDlgVisible: false});
+    const payments = {
+      waiterName: 'Tester', //action.serverName,
+      cashierName: 'Casher',
+      cashierCode: '999',
+      paymentStatus: payment.paymentType === 'Pending' ? 'Pending' : 'Paid',
+      paymentType: payment.paymentType,
+      discount: payment.discount,
+      amountPaid: payment.netAmount,
+      totalAmount: payment.totalAmount,
+      paymentDate: payment.paymentDate,
+    };
+
+    this.props.updatePaymentStatus(payments);
+  };
+
   render() {
-    // console.log('food page navigation state....', this.props.navigation.state);
+    // console.log('current table number .... ', this.props.tableNo);
     return (
       <View style={styles.mainContainer}>
         <View style={styles.leftContainer}>
@@ -247,6 +278,17 @@ class FoodPage extends Component {
           isDialogVisible={this.state.showEditOrderedItemsDlg}
           itemDetails={this.editedOrder}
         />
+        {this.state.totalAmount > 0 && (
+          <FloatingButton onBilling={this.onBilling} />
+        )}
+        <PaymentDialog
+          dlgTitle={'Payment'}
+          isDialogVisible={this.state.paymentDlgVisible}
+          onDlgDone={this.onPaymentDlgDone}
+          onDlgCancel={this.onPaymentDlgCancel}
+          tableNo={this.props.tableNo}
+          amount={this.state.totalAmount}
+        />
       </View>
     );
   }
@@ -289,30 +331,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   orderTitleText: {
-    fontSize: deviceFactor(20),
+    fontSize: deviceFactor(15),
     color: '#ff8000',
   },
   newOrderText: {
-    fontSize: deviceFactor(10),
+    fontSize: deviceFactor(7),
     color: '#ff8000',
   },
   editOrderText: {
-    fontSize: deviceFactor(10),
+    fontSize: deviceFactor(7),
     color: '#ff8000',
   },
 });
 
 const mapDispatchToProps = dispatch => ({
   // saveOrder: dispatch(saveOrder()),
-  saveTableNumber: tableNo => dispatch(saveTableNumber(tableNo)),
+  saveTableNumber: (tableNo, waiterCode) =>
+    dispatch(saveTableNumber(tableNo, waiterCode)),
   clearAllOrderedItems: tableNo => dispatch(clearAllOrderedItems(tableNo)),
   editOrderedItems: itemDetails => dispatch(editOrderedItems(itemDetails)),
+  updatePaymentStatus: payment => dispatch(updatePaymentStatus(payment)),
 });
 
 const mapStateToProps = state => {
-  console.log('state from foodpage', state);
+  // console.log('state from foodpage', state);
   return {
     orders: state.food[state.food.tableNo],
+    waiterCode: state.food.waiterCode,
+    cashierCode: state.food.chashierCode,
+    tableNo: state.food.tableNo,
   };
 };
 export default connect(
