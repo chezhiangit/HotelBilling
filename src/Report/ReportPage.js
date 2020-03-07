@@ -22,9 +22,12 @@ class ReportPage extends Component {
     if (props.bills?.length > 0) {
       let x = null;
       for (x of props.bills) {
-        total = total + x.amountPaid;
+        if (x.paymentStatus !== '') {
+          total = total + x.amountPaid;
+          console.log('getDerivedStateFromProps 1 ....total', total);
+        }
       }
-      console.log('getDerivedStateFromProps ....total', total);
+      console.log('getDerivedStateFromProps 2 ....total', total);
       return {totalAmount: total};
     } else {
       return {totalAmount: 0};
