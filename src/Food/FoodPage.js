@@ -245,13 +245,15 @@ class FoodPage extends Component {
         <View style={styles.rightContainer}>
           <View style={styles.orderTitleContainer}>
             <TouchableOpacity onPress={this.onNewOrder}>
-              <Text style={styles.newOrderText}>Create Order</Text>
+              <Text style={styles.newOrderText}>Create order</Text>
             </TouchableOpacity>
             <View style={styles.ordersTitle}>
-              <Text style={styles.orderTitleText}>Orders</Text>
+              <Text style={styles.orderTitleText}>
+                Table No: {this.props.tableNo}
+              </Text>
             </View>
             <TouchableOpacity onPress={this.onEditOrder}>
-              <Text style={styles.editOrderText}>Open Order</Text>
+              <Text style={styles.editOrderText}>Open order</Text>
             </TouchableOpacity>
           </View>
           <ListHeaderComponent
@@ -304,43 +306,52 @@ const styles = StyleSheet.create({
     width: '60%',
     height: '100%',
     // margin: '1%',
-    borderColor: 'red',
-    borderWidth: 1,
+    borderColor: 'gray',
+    borderRightWidth: 2,
     alignItems: 'center',
   },
   rightContainer: {
     width: '40%',
     height: '100%',
     // margin: '1%',
-    borderColor: 'blue',
-    borderWidth: 1,
+    // borderColor: 'blue',
+    // borderWidth: 1,
     // alignItems: 'center',
-    paddingLeft: deviceFactor(5),
-    paddingRight: deviceFactor(5),
+    // paddingLeft: deviceFactor(5),
+    // paddingRight: deviceFactor(5),
   },
   orderTitleContainer: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
   },
   ordersTitle: {
     width: deviceFactor(100),
     height: deviceFactor(20),
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   orderTitleText: {
-    fontSize: deviceFactor(15),
-    color: '#ff8000',
+    fontSize: deviceFactor(7),
+    color: '#696969',
+    fontWeight: 'bold',
   },
   newOrderText: {
     fontSize: deviceFactor(7),
     color: '#ff8000',
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: '#696969',
+    padding: 2,
   },
   editOrderText: {
     fontSize: deviceFactor(7),
     color: '#ff8000',
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: '#696969',
+    padding: 2,
   },
 });
 

@@ -17,17 +17,14 @@ class ReportPage extends Component {
     };
   }
   static getDerivedStateFromProps(props, state) {
-    console.log('getDerivedStateFromProps ....props', props);
     let total = 0;
     if (props.bills?.length > 0) {
       let x = null;
       for (x of props.bills) {
         if (x.paymentStatus !== '') {
           total = total + x.amountPaid;
-          console.log('getDerivedStateFromProps 1 ....total', total);
         }
       }
-      console.log('getDerivedStateFromProps 2 ....total', total);
       return {totalAmount: total};
     } else {
       return {totalAmount: 0};

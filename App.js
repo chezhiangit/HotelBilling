@@ -43,7 +43,8 @@ const FoodTab = createStackNavigator(
         color: Colors.tabCaptionColor,
       },
       // headerTintColor: '#FFFFFF',
-      title: `${I18n.t('menu.food')}/${I18n.t('menu.drinks')}`,
+      // title: `${I18n.t('menu.food')}/${I18n.t('menu.drinks')}`,
+      title: 'Orders',
     },
     navigationOptions: {
       tabBarLabel: `${I18n.t('menu.food')}/${I18n.t('menu.drinks')}`,
@@ -70,7 +71,8 @@ const MoreTab = createStackNavigator(
         color: Colors.tabCaptionColor,
       },
       // headerTintColor: '#FFFFFF',
-      title: I18n.t('menu.more'),
+      // title: I18n.t('menu.more'),
+      title: 'More actions',
     },
     navigationOptions: {
       tabBarLabel: I18n.t('menu.more'),

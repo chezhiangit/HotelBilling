@@ -6,35 +6,29 @@ import Dialog, {
   DialogFooter,
   DialogButton,
 } from 'react-native-popup-dialog';
-import {deviceFactor} from '../../Utils/resolution';
+import {deviceFactor} from '../../../Utils/resolution';
 
-class EditOrderedItemDialogComponent extends React.PureComponent {
+class AddEditItemDialog extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // tableNo: ,
       itemCode: '',
       itemName: '',
-      price: '',
-      qty: '',
+      itemPrice: '',
+      itemDiscount: '',
+      itemCGST: '',
+      itemSGST: '',
     };
   }
 
-  static getDerivedStateFromProps(nextProps, state) {
-    // console.log(
-    //   'edited order getDerivedStateFromProps...',
-    //   nextProps.itemDetails,
-    // );
-    // console.log('state getDerivedStateFromProps...', state);
-    if (state.itemCode === '' && nextProps.isDialogVisible) {
-      // console.log('state getDerivedStateFromProps... if ', state);
-      return {...nextProps.itemDetails};
-    } else if (!nextProps.isDialogVisible) {
-      // console.log('state getDerivedStateFromProps... else ', state);
-      return {itemCode: '', itemName: '', price: '', qty: ''};
-    }
-    return {};
-  }
+  // static getDerivedStateFromProps(nextProps, state) {
+  //   if (state.itemCode === '' && nextProps.isDialogVisible) {
+  //     return {...nextProps.itemDetails};
+  //   } else if (!nextProps.isDialogVisible) {
+  //     return {itemCode: '', itemName: '', price: '', qty: ''};
+  //   }
+  //   return {};
+  // }
 
   onDismissDlg = () => {
     // console.log('onDismiss ...');
@@ -47,13 +41,15 @@ class EditOrderedItemDialogComponent extends React.PureComponent {
   };
 
   onDlgDone = () => {
-    const eitedOrderedItem = {
+    const itemDetails = {
       itemCode: this.state.itemCode,
       itemName: this.state.itemName,
-      price: this.state.price,
-      qty: this.state.qty === '' ? 0 : this.state.qty,
+      itemPrice: this.state.itemPrice,
+      itemDiscount: this.state.itemDiscount,
+      itemCGST: this.state.itemCGST,
+      itemSGST: this.state.itemSGST,
     };
-    this.props.onDlgDone(eitedOrderedItem);
+    this.props.onDlgDone(itemDetails);
   };
 
   onTextChange = text => {
@@ -61,7 +57,6 @@ class EditOrderedItemDialogComponent extends React.PureComponent {
   };
 
   render() {
-    // console.log('edited order render...', this.props.itemDetails);
     return (
       <Dialog
         onDismiss={this.onDismissDlg}
@@ -91,57 +86,81 @@ class EditOrderedItemDialogComponent extends React.PureComponent {
         }
         visible={this.props.isDialogVisible}>
         <DialogContent style={styles.dialogContent}>
-          {/* <View style={styles.container}> */}
           <View style={styles.dlgRow}>
             <Text style={styles.label}>Item Code:</Text>
             <TextInput
-              // onChangeText={text => this.onTextChange(text)}
-              // placeholder={'Enter item code'}
+              onChangeText={text => this.onCodeChange(text)}
+              placeholder={'Enter item code'}
               style={styles.textInput}
-              // autoFocus={true}
               maxLength={100}
-              // defaultValue={`${this.props.itemCode}`}
               value={this.state.itemCode}
               keyboardType={'numeric'}
-              editable={false}
             />
           </View>
           <View style={styles.dlgRow}>
             <Text style={styles.label}>Item Name:</Text>
             <TextInput
-              // onChangeText={text => this.onTextChange(text)}
-              // placeholder={'Enter item name'}
+              onChangeText={text => this.onNameChange(text)}
+              placeholder={'Enter item name'}
               style={styles.textInput}
-              // autoFocus={true}
               maxLength={100}
               value={this.state.itemName}
-              editable={false}
             />
           </View>
           <View style={styles.dlgRow}>
             <Text style={styles.label}>Item price:</Text>
             <TextInput
-              // onChangeText={text => this.onTextChange(text)}
-              // placeholder={'Enter item price'}
+              onChangeText={text => this.onPriceChange(text)}
+              placeholder={'Enter item price'}
               style={styles.textInput}
-              // autoFocus={true}
               maxLength={5}
-              value={this.state.price}
-              editable={false}
+              value={this.state.itemPrice}
             />
           </View>
           <View style={styles.dlgRow}>
-            <Text style={styles.label}>Quantity:</Text>
+            <Text style={styles.label}>Discount:</Text>
             <TextInput
-              onChangeText={text => this.onTextChange(text)}
-              placeholder={'Enter quantity'}
+              onChangeText={text => this.onDiscountChange(text)}
+              placeholder={'Enter discount'}
               style={styles.textInput}
               autoFocus={true}
               maxLength={5}
-              value={this.state.qty}
+              value={this.state.itemDiscount}
             />
           </View>
-          {/* </View> */}
+          <View style={styles.dlgRow}>
+            <Text style={styles.label}>CGST :</Text>
+            <TextInput
+              onChangeText={text => this.onCGSTChange(text)}
+              placeholder={'Enter CGST'}
+              style={styles.textInput}
+              autoFocus={true}
+              maxLength={5}
+              value={this.state.itemCGST}
+            />
+          </View>
+          <View style={styles.dlgRow}>
+            <Text style={styles.label}>SGST :</Text>
+            <TextInput
+              onChangeText={text => this.onSGSTChange(text)}
+              placeholder={'Enter SGST'}
+              style={styles.textInput}
+              autoFocus={true}
+              maxLength={5}
+              value={this.state.itemSGST}
+            />
+          </View>
+          <View style={styles.dlgRow}>
+            <Text style={styles.label}>HSN :</Text>
+            <TextInput
+              onChangeText={text => this.onHSNChange(text)}
+              placeholder={'Enter HSN'}
+              style={styles.textInput}
+              autoFocus={true}
+              maxLength={5}
+              value={this.state.itemSGST}
+            />
+          </View>
         </DialogContent>
       </Dialog>
     );
@@ -215,4 +234,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditOrderedItemDialogComponent;
+export default AddEditItemDialog;

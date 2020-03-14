@@ -11,13 +11,20 @@ import {deviceFactor} from '../../../Utils/resolution';
 import ReportsSeparatorComponent from '../ReportsComponents/ReportsSeparatorComponent';
 import {setCurrentTable} from '../../../Actions/FoodActions';
 
-const ReportName = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'Custom'];
+const MoreActions = [
+  'Food/Drinks Items',
+  'Manage Users',
+  'Set tax',
+  'Set discount',
+  'Manage Contacts',
+  'Logout',
+];
 
-class ReportsNameList extends Component {
+class MoreActionList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedReportIndex: 0,
+      selectedActionIndex: 0,
     };
   }
 
@@ -35,25 +42,26 @@ class ReportsNameList extends Component {
     return {};
   }
 
-  onRowSelected = selectedReportIndex => {
+  onRowSelected = selectedActionIndex => {
     // console.log('onRowSelected .... pending bills');
-    this.setState({selectedReportIndex});
+    this.setState({selectedActionIndex});
     // this.props.setCurrentTable(selectedTableNo);
+    this.props.onItemSelected(selectedActionIndex);
   };
 
-  renderItems = ({item, index}) => (
+  renderActions = ({item, index}) => (
     <TouchableWithoutFeedback onPress={() => this.onRowSelected(index)}>
       <View
         style={[
           styles.container,
-          this.state.selectedReportIndex === index && {
+          this.state.selectedActionIndex === index && {
             backgroundColor: '#42aaf5',
           },
         ]}>
         <Text
           style={[
             styles.text,
-            this.state.selectedReportIndex === index && {color: '#f7f7f7'},
+            this.state.selectedActionIndex === index && {color: '#f7f7f7'},
           ]}>
           {item}
         </Text>
@@ -68,8 +76,8 @@ class ReportsNameList extends Component {
     return (
       <View>
         <FlatList
-          data={ReportName}
-          renderItem={this.renderItems}
+          data={MoreActions}
+          renderItem={this.renderActions}
           keyExtractor={item => item}
           ItemSeparatorComponent={() => <ReportsSeparatorComponent />}
         />
@@ -107,4 +115,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ReportsNameList);
+)(MoreActionList);
